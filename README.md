@@ -106,4 +106,3 @@ project-root/
 │   └── package.json
 │
 └── docs/                  # UML, use case diagrams
-
