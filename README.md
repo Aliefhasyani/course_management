@@ -28,24 +28,33 @@ Aplikasi **Sistem Manajemen Kursus** dirancang untuk memudahkan pengelolaan mate
 
 ## **📂 Struktur Proyek**  
 ```bash
-course-management/
-├── backend/             # Flask API
-│   ├── app.py           # Main Flask app
-│   ├── routes/          # API routes (auth, courses, users)
-│   ├── models/          # Database models
-│   ├── utils/           # JWT, error handlers
-│   └── requirements.txt # Dependencies
-├── frontend/            # React App
+project-root/
+├── backend/               # Flask API
+│   ├── app/               # Modular structure
+│   │   ├── __init__.py
+│   │   ├── routes/
+│   │   │   ├── auth.py    # JWT endpoints
+│   │   │   ├── courses.py # CRUD endpoints
+│   │   │   └── users.py   # User management
+│   │   ├── models/        # DB models
+│   │   ├── utils/         # JWT, error handlers
+│   │   └── config.py      # DB config
+│   ├── requirements.txt
+│   └── run.py             # Entry point
+│
+├── frontend/              # React App
 │   ├── src/
-│   │   ├── components/  # UI Components
-│   │   ├── pages/       # Role-based pages
-│   │   ├── hooks/       # Custom hooks (API calls)
-│   │   ├── context/     # Auth context
-│   │   └── App.js       # Routing & protected routes
+│   │   ├── api/           # Axios API calls
+│   │   ├── components/    # Reusable UI
+│   │   ├── pages/         # Role-based pages
+│   │   ├── contexts/      # Auth context
+│   │   ├── hooks/         # Custom hooks
+│   │   ├── App.js         # Main router
+│   │   └── index.js
 │   ├── tailwind.config.js
 │   └── package.json
-└── README.md
-```
+│
+└── docs/                  # UML, use case diagrams
  
 
 ---
