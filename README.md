@@ -1,11 +1,6 @@
 # **Tugas Project MK Web Lanjutan**  
 **Sistem Manajemen Kursus (Course Management System)**  
 
-**Anggota Kelompok:**  
-1. [Nama Anggota 1]  
-2. [Nama Anggota 2]  
-3. [Nama Anggota 3]  
-4. [Nama Anggota 4] (opsional)  
 
 ---
 
@@ -51,37 +46,7 @@ course-management/
 │   └── package.json
 └── README.md
 ```
-
----
-
-## **🔧 Setup & Instalasi**  
-### **Backend (Flask)**
-1. **Buat virtual environment & install dependencies:**  
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # (Windows: venv\Scripts\activate)
-   pip install -r requirements.txt
-   ```
-
-2. **Jalankan server:**  
-   ```bash
-   flask run --port 5000
-   ```
-   - API akan berjalan di `http://localhost:5000`  
-
-### **Frontend (React)**
-1. **Install dependencies:**  
-   ```bash
-   cd frontend
-   npm install
-   ```
-
-2. **Jalankan development server:**  
-   ```bash
-   npm start
-   ```
-   - Aplikasi akan berjalan di `http://localhost:3000`  
+ 
 
 ---
 
@@ -94,15 +59,7 @@ course-management/
 
 ---
 
-## **📊 Database (4+ Tabel)**  
-| Tabel         | Deskripsi                          |
-|--------------|----------------------------------|
-| `users`      | Data pengguna (admin & student)   |
-| `courses`    | Daftar kursus                     |
-| `enrollments`| Pendaftaran kursus oleh student   |
-| `progress`   | Progress belajar student          |
 
----
 
 ## **⚡ Fitur Teknis (Backend)**  
 ✅ **Modular Flask** (Blueprint untuk routes)  
@@ -120,14 +77,7 @@ course-management/
 
 ---
 
-## **📌 Use Case Diagram**  
-```mermaid
-flowchart TD
-    Admin --> |Kelola Kursus| CRUD_Courses
-    Admin --> |Kelola User| CRUD_Users
-    Student --> |Daftar Kursus| Enroll_Course
-    Student --> |Lihat Progress| View_Progress
-```
+
 
 ---
 
@@ -147,6 +97,4 @@ flowchart TD
 - [Flask JWT Extended](https://flask-jwt-extended.readthedocs.io/)  
 - [DaisyUI Docs](https://daisyui.com/)  
 
----
 
-**© 2024 - MK Web Lanjutan - [Nama Universitas]**
