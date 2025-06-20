@@ -1,6 +1,5 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from models import db
+from models.Course import db
 from routes.routes_udemy import udemy_bp
 
 app = Flask(__name__)

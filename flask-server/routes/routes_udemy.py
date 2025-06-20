@@ -38,3 +38,26 @@ def import_courses():
             db.session.add(course)
     db.session.commit()
     return jsonify({"message": "Courses imported!"}), 201
+
+@udemy_bp.route('/api/courses', methods=['GET'])
+def get_courses():
+    courses = Course.query.all()
+    result = []
+    for course in courses:
+        result.append({
+            "id": course.id,
+            "sku": course.sku,
+            "pic": course.pic,
+            "title": course.title,
+            "coupon": course.coupon,
+            "org_price": course.org_price,
+            "description": course.description,
+            "category": course.category,
+            "language": course.language,
+            "platform": course.platform,
+            "rating": course.rating,
+            "duration": course.duration,
+            "expiry": course.expiry,
+            "savedtime": course.savedtime
+        })
+    return jsonify(result)
