@@ -28,6 +28,134 @@
   color: #61dafb;
 }
 
+
+body {
+  background: #f7f7f7;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.course-list-container {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.course-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: flex-start;
+}
+
+.course-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  width: 260px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+
+.course-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+}
+
+.course-img {
+  width: 220px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.course-info h2 {
+  font-size: 1.1rem;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.course-category {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+
+.course-price {
+  color: #2d8f2d;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.details-link {
+  background: #007bff;
+  color: #fff;
+  padding: 7px 16px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.details-link:hover {
+  background: #0056b3;
+}
+
+.course-detail-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 32px;
+}
+
+.course-detail-img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.course-detail-info p {
+  margin: 8px 0;
+}
+
+.go-to-course {
+  display: inline-block;
+  background: #28a745;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.go-to-course:hover {
+  background: #1e7e34;
+}
+
+.back-link {
+  display: inline-block;
+  margin-top: 20px;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 1.2rem;
+  color: #888;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

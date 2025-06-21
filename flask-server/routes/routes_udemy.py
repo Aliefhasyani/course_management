@@ -39,6 +39,7 @@ def import_courses():
     db.session.commit()
     return jsonify({"message": "Courses imported!"}), 201
 
+
 @udemy_bp.route('/api/courses', methods=['GET'])
 def get_courses():
     courses = Course.query.all()
