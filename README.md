@@ -61,11 +61,11 @@ Aplikasi **Sistem Manajemen Kursus** dirancang untuk memudahkan pengelolaan mate
 ## **🚀 Deployment**  
 ### **1. Backend (Flask)**  
 - **Render / Railway / Heroku**  
-- Pastikan set environment variables (`JWT_SECRET`, `DATABASE_URL`).  
+
 
 ### **2. Frontend (React)**  
 - **Vercel / Netlify**  
-- Atur `API_BASE_URL` ke backend yang sudah di-deploy.  
+ 
 
 ---
 
