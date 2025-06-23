@@ -1,4 +1,5 @@
 import './App.css';
+import './index.css';
 import React, { useEffect, useState } from 'react';
 
 import {
@@ -12,7 +13,7 @@ import {
 function CourseList({ courses }) {
   return (
     <div className="course-list-container">
-      <h1>Udemy Courses</h1>
+      <h1 className="text-4xl font-bold text-blue-600 mb-6">Udemy Courses</h1>
       <div className="course-list">
         {courses.map(course => (
           <div className="course-card" key={course.id}>
