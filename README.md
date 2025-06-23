@@ -56,18 +56,7 @@ Aplikasi **Sistem Manajemen Kursus** dirancang untuk memudahkan pengelolaan mate
 
 
 
----
 
-## **🚀 Deployment**  
-### **1. Backend (Flask)**  
-- **Render / Railway / Heroku**  
-
-
-### **2. Frontend (React)**  
-- **Vercel / Netlify**  
- 
-
----
 
 ## **📌 Referensi**  
 - [React Router](https://reactrouter.com)  
