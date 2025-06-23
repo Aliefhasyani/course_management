@@ -124,7 +124,7 @@ function App() {
   );
 }
 function Register() {
-  const [form, setForm] = useState({ username: '', email: '', password: '', role: 'student' });
+  const [form, setForm] = useState({ username: '', email: '', password: '', role: 'buyer' });
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -152,8 +152,8 @@ function Register() {
         <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
         <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
         <select name="role" value={form.role} onChange={handleChange}>
-          <option value="student">Student</option>
-          <option value="teacher">Teacher</option>
+          <option value="buyer">Buyer</option>
+          <option value="seller">Seller</option>
           <option value="admin">Admin</option>
         </select>
         <button type="submit" className="auth-btn">Register</button>

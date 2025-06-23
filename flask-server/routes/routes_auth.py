@@ -9,10 +9,10 @@ def register():
     if User.query.filter((User.username == data['username']) | (User.email == data['email'])).first():
         return jsonify({'message': 'Username or email already exists'}), 400
     user = User(
-        username=data['username'],
-        email=data['email'],
-        role=data.get('role', 'student')
-    )
+    username=data['username'],
+    email=data['email'],
+    role=data.get('role', 'buyer')  
+)
     user.set_password(data['password'])
     db.session.add(user)
     db.session.commit()
