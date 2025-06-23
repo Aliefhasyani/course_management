@@ -30,15 +30,40 @@ function CourseList({ courses }) {
   );
 }
 
-function Navbar() {
+function Navbar({ user, setUser }) {
   return (
     <nav className="navbar">
       <div className="navbar-content">
         <Link className="navbar-brand" to="/">Course Manager</Link>
         <div className="navbar-links">
           <Link to="/">Home</Link>
-          <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link>
+          {!user && (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/register">Register</Link>
+            </>
+          )}
+          {user && (
+            <>
+              <span style={{ color: "#fff", marginLeft: 18 }}>
+                {user.username} ({user.role})
+              </span>
+              <button
+                className="logout-btn"
+                onClick={() => setUser(null)}
+                style={{
+                  marginLeft: 18,
+                  background: "none",
+                  border: "none",
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "1rem"
+                }}
+              >
+                Logout
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
@@ -78,6 +103,7 @@ function CourseDetail() {
 
 function App() {
   const [courses, setCourses] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetch('http://192.168.1.9:5000/api/courses')
@@ -87,39 +113,41 @@ function App() {
 
   return (
     <Router>
-      <Navbar /> {/* Add the Navbar here */}
+      <Navbar user={user} setUser={setUser} />
       <Routes>
         <Route path="/" element={<CourseList courses={courses} />} />
         <Route path="/course/:id" element={<CourseDetail />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
 }
-
-
 function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'student' });
   const [message, setMessage] = useState('');
+  const [success, setSuccess] = useState(false);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = e => {
-    e.preventDefault();
-    fetch('http://192.168.1.9:5000/api/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    })
-      .then(res => res.json())
-      .then(data => setMessage(data.message));
-  };
+  e.preventDefault();
+  fetch('http://192.168.1.9:5000/api/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(form)
+  })
+    .then(async res => {
+      const data = await res.json();
+      setMessage(data.message);
+      setSuccess(res.status === 201);
+    });
+};
 
   return (
     <div className="auth-container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
         <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
         <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
         <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
@@ -128,18 +156,18 @@ function Register() {
           <option value="teacher">Teacher</option>
           <option value="admin">Admin</option>
         </select>
-        <button type="submit">Register</button>
+        <button type="submit" className="auth-btn">Register</button>
       </form>
-      {message && <div style={{marginTop: 10}}>{message}</div>}
-      <p>Already have an account? <Link to="/login">Login</Link></p>
+      {message && <div className={success ? "auth-success" : "auth-error"}>{message}</div>}
+      <p style={{ marginTop: 12 }}>Already have an account? <Link to="/login">Login</Link></p>
     </div>
   );
 }
 
-function Login() {
+function Login({ setUser }) {
   const [form, setForm] = useState({ username: '', password: '' });
   const [message, setMessage] = useState('');
-  const [user, setUser] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -154,8 +182,10 @@ function Login() {
       .then(data => {
         if (data.user) {
           setUser(data.user);
+          setSuccess(true);
           setMessage('Login successful!');
         } else {
+          setSuccess(false);
           setMessage(data.message);
         }
       });
@@ -164,20 +194,20 @@ function Login() {
   return (
     <div className="auth-container">
       <h2>Login</h2>
-      {user ? (
-        <div>
-          <p>Welcome, {user.username} ({user.role})!</p>
+      {success ? (
+        <div className="auth-success">
+         
           <Link to="/">Go to Courses</Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit}>
+        <form className="auth-form" onSubmit={handleSubmit}>
           <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
           <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-          <button type="submit">Login</button>
+          <button type="submit" className="auth-btn">Login</button>
         </form>
       )}
-      {message && <div style={{marginTop: 10}}>{message}</div>}
-      <p>Don't have an account? <Link to="/register">Register</Link></p>
+      {message && <div className={success ? "auth-success" : "auth-error"}>{message}</div>}
+      {!success && <p style={{ marginTop: 12 }}>Don't have an account? <Link to="/register">Register</Link></p>}
     </div>
   );
 }
