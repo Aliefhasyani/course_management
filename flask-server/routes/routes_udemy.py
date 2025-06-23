@@ -62,3 +62,23 @@ def get_courses():
             "savedtime": course.savedtime
         })
     return jsonify(result)
+
+@udemy_bp.route('/api/courses/<int:course_id>', methods=['GET'])
+def get_course(course_id):
+    course = Course.query.get_or_404(course_id)
+    return jsonify({
+        "id": course.id,
+        "sku": course.sku,
+        "pic": course.pic,
+        "title": course.title,
+        "coupon": course.coupon,
+        "org_price": course.org_price,
+        "description": course.description,
+        "category": course.category,
+        "language": course.language,
+        "platform": course.platform,
+        "rating": course.rating,
+        "duration": course.duration,
+        "expiry": course.expiry,
+        "savedtime": course.savedtime
+    })
