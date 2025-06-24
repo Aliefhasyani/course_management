@@ -1,7 +1,6 @@
 import './App.css';
 import './index.css';
 import React, { useEffect, useState } from 'react';
-
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,56 +9,25 @@ import {
   useParams
 } from 'react-router-dom';
 
-function CourseList({ courses }) {
-  return (
-    <div className="course-list-container">
-      <h1 className="text-4xl font-bold text-blue-600 mb-6">Udemy Courses</h1>
-      <div className="course-list">
-        {courses.map(course => (
-          <div className="course-card" key={course.id}>
-            <img src={course.pic} alt={course.title} className="course-img" />
-            <div className="course-info">
-              <h2>{course.title}</h2>
-              <p className="course-category">{course.category}</p>
-              <p className="course-price">{course.org_price}</p>
-              <Link className="details-link" to={`/course/${course.id}`}>View Details</Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function Navbar({ user, setUser }) {
   return (
-    <nav className="navbar">
-      <div className="navbar-content">
-        <Link className="navbar-brand" to="/">Course Manager</Link>
-        <div className="navbar-links">
-          <Link to="/">Home</Link>
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-blue-900 to-blue-700 shadow-lg">
+      <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+        <Link className="text-white text-2xl font-extrabold tracking-wide" to="/">🎓 Course Manager</Link>
+        <div className="flex items-center gap-6">
+          <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/">Home</Link>
           {!user && (
             <>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/login">Login</Link>
+              <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/register">Register</Link>
             </>
           )}
           {user && (
             <>
-              <span style={{ color: "#fff", marginLeft: 18 }}>
-                {user.username} ({user.role})
-              </span>
+              <span className="ml-2 text-yellow-200 font-semibold">{user.username} <span className="text-xs bg-blue-800 px-2 py-1 rounded ml-1">{user.role}</span></span>
               <button
-                className="logout-btn"
+                className="ml-4 px-4 py-1 bg-yellow-400 text-blue-900 font-bold rounded hover:bg-yellow-300 transition"
                 onClick={() => setUser(null)}
-                style={{
-                  marginLeft: 18,
-                  background: "none",
-                  border: "none",
-                  color: "#fff",
-                  cursor: "pointer",
-                  fontSize: "1rem"
-                }}
               >
                 Logout
               </button>
@@ -68,6 +36,37 @@ function Navbar({ user, setUser }) {
         </div>
       </div>
     </nav>
+  );
+}
+
+function CourseList({ courses }) {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10">
+      <div className="max-w-6xl mx-auto px-4">
+        <h1 className="text-4xl font-extrabold text-blue-800 mb-10 text-center drop-shadow">Udemy Courses</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {courses.map(course => (
+            <div
+              key={course.id}
+              className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transform transition duration-300 hover:-translate-y-2 hover:scale-105 p-5 flex flex-col"
+            >
+              <img src={course.pic} alt={course.title} className="rounded-lg mb-4 h-40 object-cover shadow" />
+              <div className="flex-1 flex flex-col">
+                <h2 className="text-lg font-bold mb-1 text-blue-900">{course.title}</h2>
+                <p className="text-xs text-gray-500 mb-1">{course.category}</p>
+                <p className="text-green-700 font-bold mb-2">{course.org_price}</p>
+                <Link
+                  className="mt-auto inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition font-semibold text-center"
+                  to={`/course/${course.id}`}
+                >
+                  View Details
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -81,49 +80,27 @@ function CourseDetail() {
       .then(data => setCourse(data));
   }, [id]);
 
-  if (!course) return <div className="loading">Loading...</div>;
+  if (!course) return <div className="loading text-center mt-20 text-gray-500">Loading...</div>;
 
   return (
-    <div className="course-detail-container">
-      <h2>{course.title}</h2>
-      <img src={course.pic} alt={course.title} className="course-detail-img" />
-      <div className="course-detail-info">
-        <p><strong>Category:</strong> {course.category}</p>
-        <p><strong>Language:</strong> {course.language}</p>
-        <p><strong>Platform:</strong> {course.platform}</p>
-        <p><strong>Price:</strong> {course.org_price}</p>
-        <p><strong>Description:</strong></p>
-        <p>{course.description}</p>
-        <a className="go-to-course" href={course.coupon} target="_blank" rel="noopener noreferrer">Go to Course</a>
-        <br /><br />
-        <Link className="back-link" to="/">← Back to Courses</Link>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8 mt-8">
+        <h2 className="text-3xl font-extrabold mb-4 text-blue-900">{course.title}</h2>
+        <img src={course.pic} alt={course.title} className="rounded-lg mb-6 w-full max-h-64 object-cover shadow" />
+        <div className="space-y-2 text-gray-700">
+          <p><span className="font-semibold">Category:</span> {course.category}</p>
+          <p><span className="font-semibold">Language:</span> {course.language}</p>
+          <p><span className="font-semibold">Platform:</span> {course.platform}</p>
+          <p><span className="font-semibold">Price:</span> <span className="text-green-700 font-bold">{course.org_price}</span></p>
+          <p className="font-semibold mt-4">Description:</p>
+          <p>{course.description}</p>
+        </div>
+        <Link className="mt-8 inline-block text-blue-700 hover:underline font-semibold" to="/">← Back to Courses</Link>
       </div>
     </div>
   );
 }
 
-function App() {
-  const [courses, setCourses] = useState([]);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    fetch('http://192.168.1.9:5000/api/courses')
-      .then(res => res.json())
-      .then(data => setCourses(data));
-  }, []);
-
-  return (
-    <Router>
-      <Navbar user={user} setUser={setUser} />
-      <Routes>
-        <Route path="/" element={<CourseList courses={courses} />} />
-        <Route path="/course/:id" element={<CourseDetail />} />
-        <Route path="/login" element={<Login setUser={setUser} />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
-    </Router>
-  );
-}
 function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'buyer' });
   const [message, setMessage] = useState('');
@@ -132,38 +109,41 @@ function Register() {
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = e => {
-  e.preventDefault();
-  fetch('http://192.168.1.9:5000/api/register', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(form)
-  })
-    .then(async res => {
-      const data = await res.json();
-      setMessage(data.message);
-      setSuccess(res.status === 201);
-    });
-};
+    e.preventDefault();
+    fetch('http://192.168.1.9:5000/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form)
+    })
+      .then(async res => {
+        const data = await res.json();
+        setMessage(data.message);
+        setSuccess(res.status === 201);
+      });
+  };
 
   return (
-    <div className="auth-container">
-      <h2>Register</h2>
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required />
-        <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-        <select name="role" value={form.role} onChange={handleChange}>
-          <option value="buyer">Buyer</option>
-          <option value="seller">Seller</option>
-          <option value="admin">Admin</option>
-        </select>
-        <button type="submit" className="auth-btn">Register</button>
-      </form>
-      {message && <div className={success ? "auth-success" : "auth-error"}>{message}</div>}
-      <p style={{ marginTop: 12 }}>Already have an account? <Link to="/login">Login</Link></p>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-10">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <h2 className="text-2xl font-extrabold mb-6 text-blue-900 text-center">Register</h2>
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          <select name="role" value={form.role} onChange={handleChange} className="border rounded px-3 py-2">
+            <option value="buyer">Buyer</option>
+            <option value="seller">Seller</option>
+            <option value="admin">Admin</option>
+          </select>
+          <button type="submit" className="bg-blue-600 text-white rounded py-2 mt-2 hover:bg-blue-700 transition font-semibold">Register</button>
+        </form>
+        {message && <div className={success ? "text-green-600 mt-4 text-center" : "text-red-600 mt-4 text-center"}>{message}</div>}
+        <p className="mt-4 text-center text-sm">Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login</Link></p>
+      </div>
     </div>
   );
 }
+
 
 function Login({ setUser }) {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -193,23 +173,48 @@ function Login({ setUser }) {
   };
 
   return (
-    <div className="auth-container">
-      <h2>Login</h2>
-      {success ? (
-        <div className="auth-success">
-         
-          <Link to="/">Go to Courses</Link>
-        </div>
-      ) : (
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required />
-          <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required />
-          <button type="submit" className="auth-btn">Login</button>
-        </form>
-      )}
-      {message && <div className={success ? "auth-success" : "auth-error"}>{message}</div>}
-      {!success && <p style={{ marginTop: 12 }}>Don't have an account? <Link to="/register">Register</Link></p>}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-10">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+        <h2 className="text-2xl font-extrabold mb-6 text-blue-900 text-center">Login</h2>
+        {success ? (
+          <div className="text-green-600 text-center font-semibold">
+            <Link to="/" className="text-blue-600 hover:underline">Go to Courses</Link>
+          </div>
+        ) : (
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <input name="username" placeholder="Username" value={form.username} onChange={handleChange} required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <input name="password" type="password" placeholder="Password" value={form.password} onChange={handleChange} required className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+            <button type="submit" className="bg-blue-600 text-white rounded py-2 mt-2 hover:bg-blue-700 transition font-semibold">Login</button>
+          </form>
+        )}
+        {message && <div className={success ? "text-green-600 mt-4 text-center" : "text-red-600 mt-4 text-center"}>{message}</div>}
+        {!success && <p className="mt-4 text-center text-sm">Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register</Link></p>}
+      </div>
     </div>
+  );
+}
+
+
+function App() {
+  const [courses, setCourses] = useState([]);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetch('http://192.168.1.9:5000/api/courses')
+      .then(res => res.json())
+      .then(data => setCourses(data));
+  }, []);
+
+  return (
+    <Router>
+      <Navbar user={user} setUser={setUser} />
+      <Routes>
+        <Route path="/" element={<CourseList courses={courses} />} />
+        <Route path="/course/:id" element={<CourseDetail />} />
+        <Route path="/login" element={<Login setUser={setUser} />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </Router>
   );
 }
 
