@@ -1,32 +1,33 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import './index.css'; // Pastikan Tailwind CSS diimpor di index.css atau App.css utama
+import './index.css'; // Pastikan Tailwind CSS diimpor di sini
 
-// Import komponen-komponen yang sudah dipisahkan
+// Import SEMUA komponen halaman yang sudah dipisah
 import Navbar from './components/Navbar';
-import CourseList from './pages/CourseList'; // Import CourseList dari pages
+import Home from './pages/Home';
+import CourseList from './pages/CourseList';
 import CourseDetail from './pages/CourseDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
-import CartPage from './pages/CartPage'; 
-import Home from './pages/Home'; // Impor komponen Home yang baru
+import CartPage from './pages/CartPage'; // Komponen halaman keranjang
 
 function App() {
   const [user, setUser] = useState(null); 
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState([]); // State untuk data keranjang
 
   // Fungsi untuk menambah kursus ke keranjang
   const addToCart = (courseToAdd) => {
     setCart((prevCart) => {
+      // Cek apakah kursus sudah ada di keranjang untuk menghindari duplikasi
       const isAlreadyInCart = prevCart.some(item => item.id === courseToAdd.id);
       if (isAlreadyInCart) {
         alert('Kursus ini sudah ada di keranjang!');
-        return prevCart;
+        return prevCart; 
       }
-      alert(`${courseToAdd.title} ditambahkan ke keranjang!`);
-      return [...prevCart, courseToAdd];
+      alert(`${courseToAdd.title} berhasil ditambahkan ke keranjang!`);
+      return [...prevCart, courseToAdd]; // Tambahkan item baru ke array
     });
   };
 
@@ -38,7 +39,7 @@ function App() {
     });
   };
 
-  // Fungsi untuk mengosongkan keranjang (setelah 'add subscription')
+  // Fungsi untuk mengosongkan keranjang (misalnya setelah pembayaran)
   const clearCart = () => {
     setCart([]);
   };
@@ -46,25 +47,29 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* Navbar akan selalu tampil, passing user, setUser, cart untuk tampilan jumlah item */}
+        {/* Navbar menerima state user dan cart untuk menampilkan info login dan jumlah item keranjang */}
         <Navbar user={user} setUser={setUser} cart={cart} />
         
-        {/* Konten halaman akan di-render di sini sesuai rute */}
         <Routes>
-          {/* Rute default sekarang mengarah ke halaman Home */}
+          {/* Rute untuk halaman Home */}
           <Route path="/" element={<Home />} /> 
           
-          {/* Rute untuk daftar semua kursus (pindah dari '/') */}
+          {/* Rute untuk daftar semua kursus. Mempassing fungsi addToCart */}
           <Route path="/courses" element={<CourseList addToCart={addToCart} />} />
 
-          {/* Rute detail kursus, passing addToCart */}
+          {/* Rute untuk detail kursus tertentu. Mempassing fungsi addToCart */}
           <Route path="/course/:id" element={<CourseDetail addToCart={addToCart} />} />
           
+          {/* Rute untuk Login. Mempassing setUser agar bisa update state user setelah login */}
           <Route path="/login" element={<Login setUser={setUser} />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/admin" element={<AdminPanel user={user} />} />
           
-          {/* Halaman keranjang, passing cart, removeFromCart, dan clearCart */}
+          {/* Rute untuk Register */}
+          <Route path="/register" element={<Register />} />
+          
+          {/* Rute untuk Admin Panel. Mempassing user untuk otorisasi */}
+          <Route path="/admin" element={<AdminPanel user={user} />} />
+
+          {/* Rute untuk halaman Keranjang. Mempassing state cart dan fungsi modifikasinya */}
           <Route path="/cart" element={<CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />} />
         </Routes>
       </div>

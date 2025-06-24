@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getCourseByIdApi } from '../api';
+import { getCourseByIdApi } from '../api'; // Pastikan import API dari folder yang benar
 
-function CourseDetail({ addToCart }) {
+// Menerima prop 'addToCart'
+function CourseDetail({ addToCart }) { 
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +13,7 @@ function CourseDetail({ addToCart }) {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const data = await getCourseByIdApi(id);
+        const data = await getCourseByIdApi(id); // Panggil fungsi API
         setCourse(data);
       } catch (err) {
         setError("Gagal mengambil detail kursus.");
@@ -51,11 +52,11 @@ function CourseDetail({ addToCart }) {
         </div>
         <button
           className="mt-8 inline-block bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition"
-          onClick={() => addToCart(course)}
+          onClick={() => addToCart(course)} // Memanggil fungsi addToCart
         >
           Add to Cart
         </button>
-        {/* Perbaikan link: Arahkan ke /courses */}
+        {/* Link kembali ke halaman Courses */}
         <Link className="mt-4 block text-blue-700 hover:underline font-semibold" to="/courses">← Back to Courses</Link>
       </div>
     </div>

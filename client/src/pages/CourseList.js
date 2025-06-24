@@ -1,9 +1,9 @@
-// client/src/pages/CourseList.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCoursesApi } from '../api'; // Import fungsi API
+import { getCoursesApi } from '../api'; // Pastikan import API dari folder yang benar
 
-function CourseList() {
+// Menerima prop 'addToCart'
+function CourseList({ addToCart }) { 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -43,7 +43,7 @@ function CourseList() {
                 key={course.id}
                 className="bg-white rounded-2xl shadow-xl hover:shadow-2xl transform transition duration-300 hover:-translate-y-2 hover:scale-105 p-5 flex flex-col"
               >
-                <img src={course.pic} alt={course.title} className="rounded-lg mb-4 h-40 object-cover shadow" />
+                <img src={course.pic} alt={course.title} className="rounded-lg mb-4 h-40 object-cover w-full shadow" />
                 <div className="flex-1 flex flex-col">
                   <h2 className="text-lg font-bold mb-1 text-blue-900">{course.title}</h2>
                   <p className="text-xs text-gray-500 mb-1">{course.category}</p>
@@ -54,14 +54,11 @@ function CourseList() {
                   >
                     View Details
                   </Link>
-                  <br />
+                  <br></br>
                   {/* Tombol diubah menjadi "Add to Cart" */}
                   <button
-                    className="mt-auto inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition font-semibold text-center"
-                    onClick={() => {
-                      // TODO: Implementasikan logika untuk menambahkan ke keranjang
-                      console.log(`Add course ${course.title} to cart`);
-                    }}
+                    className="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition font-semibold text-center w-full"
+                    onClick={() => addToCart(course)} // Memanggil fungsi addToCart
                   >
                     Add to Cart
                   </button>
