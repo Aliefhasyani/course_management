@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify
 import requests
 from models.Course import db, Course
+from middleware.admin_middleware import admin_required
 
 udemy_bp = Blueprint('udemy', __name__)
 
@@ -81,4 +82,13 @@ def get_course(course_id):
         "duration": course.duration,
         "expiry": course.expiry,
         "savedtime": course.savedtime
+    })
+    
+@udemy_bp.route('/api/admin-panel', methods=['GET'])
+@admin_required
+def admin_panel():
+    
+    return jsonify({
+        "message": "Welcome, admin!",
+        "courses_count": Course.query.count()
     })

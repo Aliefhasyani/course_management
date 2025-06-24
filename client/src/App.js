@@ -9,6 +9,45 @@ import {
   useParams
 } from 'react-router-dom';
 
+function AdminPanel({ user }) {
+  const [adminData, setAdminData] = useState(null);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      fetch('http://192.168.1.9:5000/api/admin-panel', {
+        headers: { Role: user.role }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error('Forbidden');
+          return res.json();
+        })
+        .then(data => setAdminData(data))
+        .catch(() => setError('You are not authorized to view this page.'));
+    }
+  }, [user]);
+
+  if (!user || user.role !== 'admin') {
+    return <div className="text-center text-red-600 mt-10 text-xl">Access denied. Admins only.</div>;
+  }
+
+  return (
+    <div className="max-w-xl mx-auto mt-16 bg-white rounded-xl shadow-lg p-8">
+      <h2 className="text-2xl font-bold mb-4 text-blue-900">Admin Panel</h2>
+      {error && <div className="text-red-600">{error}</div>}
+      {adminData ? (
+        <div>
+          <p className="mb-2">{adminData.message}</p>
+          <p className="font-semibold">Total Courses: {adminData.courses_count}</p>
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
+    </div>
+  );
+}
+
+
 function Navbar({ user, setUser }) {
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-blue-900 to-blue-700 shadow-lg">
@@ -16,6 +55,9 @@ function Navbar({ user, setUser }) {
         <Link className="text-white text-2xl font-extrabold tracking-wide" to="/">🎓 Course Manager</Link>
         <div className="flex items-center gap-6">
           <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/">Home</Link>
+          {user && user.role === 'admin' && (
+            <Link className="text-yellow-300 hover:text-white font-medium transition" to="/admin">Admin Panel</Link>
+          )}
           {!user && (
             <>
               <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/login">Login</Link>
@@ -60,6 +102,13 @@ function CourseList({ courses }) {
                   to={`/course/${course.id}`}
                 >
                   View Details
+                </Link>
+                <br></br>
+                <Link
+                  className="mt-auto inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition font-semibold text-center"
+                  to={`/course/${course.id}`}
+                >
+                  Buy Course
                 </Link>
               </div>
             </div>
@@ -213,6 +262,7 @@ function App() {
         <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="/login" element={<Login setUser={setUser} />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/admin" element={<AdminPanel user={user} />} />
       </Routes>
     </Router>
   );

@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.User import db, User
 
+
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/api/register', methods=['POST'])
