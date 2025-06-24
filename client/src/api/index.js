@@ -1,20 +1,22 @@
-// client/src/api/index.js
+const API_BASE_URL = 'http://127.0.0.1:5000';
 
-const API_BASE_URL = 'http://127.0.0.1:5000'; // Pastikan ini menggunakan localhost
+// Helper to get JWT token from localStorage
+const getToken = () => localStorage.getItem('access_token');
 
-// Helper untuk membuat header dengan otentikasi role
-const authHeader = (role) => {
-  return {
-    'Content-Type': 'application/json',
-    'Role': role // Mengirim role di header untuk middleware admin_required
-  };
+const authHeader = (isJson = true) => {
+  const token = getToken();
+  let headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+  if (isJson) headers['Content-Type'] = 'application/json';
+  return headers;
 };
 
-// --- API Course (sudah ada) ---
-
+// For GET requests:
 export const getCoursesApi = async () => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/courses`);
+    const response = await fetch(`${API_BASE_URL}/api/courses`, {
+      headers: authHeader(false) // Don't send Content-Type for GET
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -27,7 +29,9 @@ export const getCoursesApi = async () => {
 
 export const getCourseByIdApi = async (id) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/courses/${id}`);
+    const response = await fetch(`${API_BASE_URL}/api/courses/${id}`, {
+      headers: authHeader(false)
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -38,11 +42,11 @@ export const getCourseByIdApi = async (id) => {
   }
 };
 
-export const createCourseApi = async (courseData, userRole) => {
+export const createCourseApi = async (courseData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/courses`, {
       method: 'POST',
-      headers: authHeader(userRole),
+      headers: authHeader(),
       body: JSON.stringify(courseData)
     });
     const data = await response.json();
@@ -56,11 +60,11 @@ export const createCourseApi = async (courseData, userRole) => {
   }
 };
 
-export const updateCourseApi = async (courseId, courseData, userRole) => {
+export const updateCourseApi = async (courseId, courseData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/courses/${courseId}`, {
       method: 'PUT',
-      headers: authHeader(userRole),
+      headers: authHeader(),
       body: JSON.stringify(courseData)
     });
     const data = await response.json();
@@ -74,11 +78,11 @@ export const updateCourseApi = async (courseId, courseData, userRole) => {
   }
 };
 
-export const deleteCourseApi = async (courseId, userRole) => {
+export const deleteCourseApi = async (courseId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/courses/${courseId}`, {
       method: 'DELETE',
-      headers: authHeader(userRole)
+      headers: authHeader()
     });
     if (!response.ok) {
       const data = await response.json();
@@ -91,7 +95,7 @@ export const deleteCourseApi = async (courseId, userRole) => {
   }
 };
 
-// --- API Autentikasi (sudah ada) ---
+// --- API Auth ---
 
 export const loginUserApi = async (username, password) => {
   try {
@@ -129,10 +133,10 @@ export const registerUserApi = async (form) => {
   }
 };
 
-export const getAdminPanelDataApi = async (userRole) => {
+export const getAdminPanelDataApi = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/api/admin-panel`, {
-      headers: authHeader(userRole) 
+      headers: authHeader(false)
     });
     if (!response.ok) {
       throw new Error('Forbidden');
@@ -144,12 +148,12 @@ export const getAdminPanelDataApi = async (userRole) => {
   }
 };
 
-// --- FUNGSI CRUD USER BARU ---
+// --- USER CRUD ---
 
-export const getAllUsersApi = async (userRole) => {
+export const getAllUsersApi = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/users`, {
-      headers: authHeader(userRole)
+      headers: authHeader(false)
     });
     const data = await response.json();
     if (!response.ok) {
@@ -162,14 +166,10 @@ export const getAllUsersApi = async (userRole) => {
   }
 };
 
-
-export const createUserApi = async (userData, userRole) => {
+export const createUserApi = async (userData) => {
   const response = await fetch(`${API_BASE_URL}/auth/users`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(userRole ? { 'Authorization': `Bearer ${userRole}` } : {})
-    },
+    headers: authHeader(),
     body: JSON.stringify(userData)
   });
   const data = await response.json();
@@ -177,11 +177,11 @@ export const createUserApi = async (userData, userRole) => {
   return data;
 };
 
-export const updateUserApi = async (userId, userData, userRole) => {
+export const updateUserApi = async (userId, userData) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/users/${userId}`, {
       method: 'PUT',
-      headers: authHeader(userRole),
+      headers: authHeader(),
       body: JSON.stringify(userData)
     });
     const data = await response.json();
@@ -195,11 +195,11 @@ export const updateUserApi = async (userId, userData, userRole) => {
   }
 };
 
-export const deleteUserApi = async (userId, userRole) => {
+export const deleteUserApi = async (userId) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/users/${userId}`, {
       method: 'DELETE',
-      headers: authHeader(userRole)
+      headers: authHeader()
     });
     if (!response.ok) {
       const data = await response.json();

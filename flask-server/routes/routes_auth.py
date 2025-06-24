@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.User import db, User 
 from werkzeug.security import generate_password_hash
+from flask_jwt_extended import create_access_token
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -29,6 +30,8 @@ def register():
 
     return jsonify({"message": "User registered successfully!", "user": new_user.to_dict()}), 201
 
+
+
 @auth_bp.route('/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -38,8 +41,12 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and user.check_password(password):
-    
-        return jsonify({"message": "Login successful!", "user": user.to_dict()}), 200
+        access_token = create_access_token(identity=str(user.id), additional_claims={"role": user.role})
+        return jsonify({
+            "message": "Login successful!",
+            "access_token": access_token,
+            "user": user.to_dict()
+        }), 200
     else:
         return jsonify({"message": "Invalid credentials"}), 401
 

@@ -9,6 +9,7 @@ function Navbar({ user, setUser, cart }) { // Menerima prop 'cart'
         <div className="flex items-center gap-6">
           <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/">Home</Link>
           <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/courses">Courses</Link>
+          <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/faqs">FAQ</Link>
           
           {user && ( // Hanya tampil jika user login
             <>

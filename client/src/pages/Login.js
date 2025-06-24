@@ -10,20 +10,22 @@ function Login({ setUser }) {
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    try {
-      const data = await loginUserApi(form.username, form.password);
-      setUser(data.user);
-      setSuccess(true);
-      setMessage('Login successful!');
-      navigate('/'); // Redirect ke halaman Home setelah login berhasil
-    } catch (error) {
-      setSuccess(false);
-      setMessage(error.message || 'Terjadi kesalahan saat login.');
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setMessage('');
+  try {
+    const data = await loginUserApi(form.username, form.password);
+    setUser(data.user);
+    // Save the token for future authenticated requests
+    localStorage.setItem('access_token', data.access_token);
+    setSuccess(true);
+    setMessage('Login successful!');
+    navigate('/'); // Redirect to Home
+  } catch (error) {
+    setSuccess(false);
+    setMessage(error.message || 'Terjadi kesalahan saat login.');
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-10">

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 import requests
 from models.Course import db, Course
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 udemy_bp = Blueprint('udemy', __name__)
@@ -51,6 +52,7 @@ def import_courses():
     return jsonify({"message": f"Courses imported successfully! Total imported: {total_imported}"}), 201
 
 @udemy_bp.route('/api/courses', methods=['GET'])
+@jwt_required()
 def get_courses():
     courses = Course.query.all()
     result = []
@@ -73,7 +75,9 @@ def get_courses():
         })
     return jsonify(result)
 
+
 @udemy_bp.route('/api/courses/<int:course_id>', methods=['GET'])
+@jwt_required()
 def get_course(course_id):
     course = Course.query.get_or_404(course_id)
     return jsonify({
@@ -94,9 +98,8 @@ def get_course(course_id):
     })
 
 
-
 @udemy_bp.route('/api/courses', methods=['POST'])
-
+@jwt_required()
 def create_course():
     data = request.get_json()
     if not data or not data.get('title') or not data.get('org_price') or not data.get('description'):
@@ -122,8 +125,9 @@ def create_course():
     db.session.commit()
     return jsonify({"message": "Course created successfully!", "course_id": new_course.id}), 201
 
-@udemy_bp.route('/api/courses/<int:course_id>', methods=['PUT'])
 
+@udemy_bp.route('/api/courses/<int:course_id>', methods=['PUT'])
+@jwt_required()
 def update_course(course_id):
     course = Course.query.get_or_404(course_id)
     data = request.get_json()
@@ -149,7 +153,7 @@ def update_course(course_id):
     return jsonify({"message": "Course updated successfully!"}), 200
 
 @udemy_bp.route('/api/courses/<int:course_id>', methods=['DELETE'])
-
+@jwt_required()
 def delete_course(course_id):
     course = Course.query.get_or_404(course_id)
     db.session.delete(course)
@@ -163,3 +167,16 @@ def admin_panel():
         "message": "Welcome, admin!",
         "courses_count": Course.query.count()
     })
+
+@udemy_bp.route('/api/faqs', methods=['GET'])
+def get_all_faqs():
+    from models.Faq import FAQ
+    faqs = FAQ.query.all()
+    return jsonify([
+        {
+            "id": faq.id,
+            "course_id": faq.course_id,
+            "question": faq.question,
+            "answer": faq.answer
+        } for faq in faqs
+    ])

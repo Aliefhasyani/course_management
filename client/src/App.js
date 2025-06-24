@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
 import CartPage from './pages/CartPage'; // Komponen halaman keranjang
+import FaqPage from './pages/FaqPage';
 
 function App() {
   const [user, setUser] = useState(null); 
@@ -68,6 +69,7 @@ function App() {
           
           {/* Rute untuk Admin Panel. Mempassing user untuk otorisasi */}
           <Route path="/admin" element={<AdminPanel user={user} />} />
+          <Route path="/faqs" element={<FaqPage />} />
 
           {/* Rute untuk halaman Keranjang. Mempassing state cart dan fungsi modifikasinya */}
           <Route path="/cart" element={<CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />} />
