@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from models.User import db, User # Pastikan ini diimpor
-from werkzeug.security import generate_password_hash # Pastikan ini diimpor
+from models.User import db, User 
+from werkzeug.security import generate_password_hash
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -10,7 +10,7 @@ def register():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    role = data.get('role', 'buyer') # Default role is 'buyer'
+    role = data.get('role', 'buyer') 
 
     if not username or not email or not password:
         return jsonify({"message": "Username, email, and password are required!"}), 400
@@ -20,7 +20,7 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({"message": "Email already registered."}), 409
 
-    hashed_password = generate_password_hash(password) # Hash password sebelum menyimpan
+    hashed_password = generate_password_hash(password)
     new_user = User(username=username, email=email, password=hashed_password, role=role)
     db.session.add(new_user)
     db.session.commit()

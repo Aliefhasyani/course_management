@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getAdminPanelDataApi } from '../api'; // Import fungsi API
+import { getAdminPanelDataApi } from '../api'; 
 
 function AdminPanel({ user }) {
   const [adminData, setAdminData] = useState(null);
@@ -11,7 +11,7 @@ function AdminPanel({ user }) {
       if (user && user.role === 'admin') {
         try {
           setLoading(true);
-          const data = await getAdminPanelDataApi(user.role); // Panggil fungsi API
+          const data = await getAdminPanelDataApi(user.role); 
           setAdminData(data);
         } catch (err) {
           setError(err.message || 'You are not authorized to view this page.');
