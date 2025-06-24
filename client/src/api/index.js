@@ -28,9 +28,11 @@ export const getCourseByIdApi = async (id) => {
   }
 };
 
+// --- PERBAIKAN DI SINI ---
 export const loginUserApi = async (username, password) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/login`, {
+    // Ubah /api/login menjadi /auth/login
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
@@ -48,7 +50,8 @@ export const loginUserApi = async (username, password) => {
 
 export const registerUserApi = async (form) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/register`, {
+    // Ubah /api/register menjadi /auth/register
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
@@ -66,8 +69,9 @@ export const registerUserApi = async (form) => {
 
 export const getAdminPanelDataApi = async (userRole) => {
   try {
+    // Ini sudah benar karena rute admin panel ada di bawah /api/
     const response = await fetch(`${API_BASE_URL}/api/admin-panel`, {
-      headers: { Role: userRole } // Perhatikan: role dikirim via header
+      headers: { Role: userRole }
     });
     if (!response.ok) {
       throw new Error('Forbidden');

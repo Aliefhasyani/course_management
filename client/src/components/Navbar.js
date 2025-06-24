@@ -1,3 +1,4 @@
+// client/src/components/Navbar.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -26,6 +27,10 @@ function Navbar({ user, setUser }) {
               >
                 Logout
               </button>
+              {/* Tambahkan link ke keranjang */}
+              <Link to="/cart" className="text-blue-100 hover:text-yellow-300 font-medium transition">
+                Keranjang
+              </Link>
             </>
           )}
         </div>

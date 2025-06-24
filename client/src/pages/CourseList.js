@@ -1,3 +1,4 @@
+// client/src/pages/CourseList.js
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCoursesApi } from '../api'; // Import fungsi API
@@ -53,13 +54,17 @@ function CourseList() {
                   >
                     View Details
                   </Link>
-                  <br></br>
-                  <Link
+                  <br />
+                  {/* Tombol diubah menjadi "Add to Cart" */}
+                  <button
                     className="mt-auto inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition font-semibold text-center"
-                    to={`/course/${course.id}`} // Seharusnya ini link pembelian kursus sebenarnya
+                    onClick={() => {
+                      // TODO: Implementasikan logika untuk menambahkan ke keranjang
+                      console.log(`Add course ${course.title} to cart`);
+                    }}
                   >
-                    Buy Course
-                  </Link>
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             ))
