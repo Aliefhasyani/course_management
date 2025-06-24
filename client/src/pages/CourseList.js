@@ -47,7 +47,7 @@ function CourseList({ addToCart }) {
                 <div className="flex-1 flex flex-col">
                   <h2 className="text-lg font-bold mb-1 text-blue-900">{course.title}</h2>
                   <p className="text-xs text-gray-500 mb-1">{course.category}</p>
-                  <p className="text-green-700 font-bold mb-2">{course.org_price}</p>
+                  <p className="text-green-700 font-bold mb-2">{formatPrice(course.org_price)}</p>
                   <Link
                     className="mt-auto inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition font-semibold text-center"
                     to={`/course/${course.id}`}
@@ -74,6 +74,11 @@ function CourseList({ addToCart }) {
       </div>
     </div>
   );
+}
+
+function formatPrice(price) {
+  if (!price) return '';
+  return price.trim().startsWith('$') ? price : `$${price}`;
 }
 
 export default CourseList;

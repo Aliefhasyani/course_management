@@ -16,13 +16,12 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
-    # --- TAMBAHKAN FUNGSI INI ---
     def to_dict(self):
         return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'role': self.role,
-            'created_at': self.created_at.isoformat() if self.created_at else None # Mengubah datetime ke string ISO
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "role": self.role,
+            "created_at": str(self.created_at)
         }
-    # --- AKHIR TAMBAHAN ---
+ 

@@ -111,9 +111,7 @@ function Home() {
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-4xl font-extrabold text-gray-800 mb-10">Inspirasi Belajar</h2>
           <QuoteCarousel images={quoteImages} />
-          <p className="text-sm text-gray-500 mt-4">
-            *Silakan letakkan gambar quotes Anda di folder `client/public/images/`.
-          </p>
+ 
         </div>
       </section>
     </div>

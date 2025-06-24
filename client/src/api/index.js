@@ -162,6 +162,21 @@ export const getAllUsersApi = async (userRole) => {
   }
 };
 
+
+export const createUserApi = async (userData, userRole) => {
+  const response = await fetch(`${API_BASE_URL}/auth/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(userRole ? { 'Authorization': `Bearer ${userRole}` } : {})
+    },
+    body: JSON.stringify(userData)
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to create user');
+  return data;
+};
+
 export const updateUserApi = async (userId, userData, userRole) => {
   try {
     const response = await fetch(`${API_BASE_URL}/auth/users/${userId}`, {
