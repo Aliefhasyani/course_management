@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getCoursesApi } from '../api'; // Menggunakan fungsi API yang sudah ada
-import QuoteCarousel from '../components/QuoteCarousel'; // Mengimpor komponen carousel baru
+import { getCoursesApi } from '../api'; 
+import QuoteCarousel from '../components/QuoteCarousel'; 
 
 function Home() {
   const [recommendedCourses, setRecommendedCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Contoh path gambar untuk carousel. Kamu harus menempatkan gambar ini di client/public/images/
   const quoteImages = [
-    '/images/quote1.jpg',
+    '/images/quote1.jpg', // Pastikan kamu menempatkan gambar ini di client/public/images/
     '/images/quote2.jpg',
     '/images/quote3.jpg',
   ];
@@ -20,7 +19,6 @@ function Home() {
       try {
         setLoading(true);
         const allCourses = await getCoursesApi();
-        // Ambil beberapa kursus secara acak (misal: 3 kursus) untuk rekomendasi
         const randomCourses = allCourses.sort(() => 0.5 - Math.random()).slice(0, 3);
         setRecommendedCourses(randomCourses);
       } catch (err) {

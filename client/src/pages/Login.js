@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { loginUserApi } from '../api'; // Import fungsi API
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { loginUserApi } from '../api';
 
 function Login({ setUser }) {
   const [form, setForm] = useState({ username: '', password: '' });
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate(); // Inisialisasi useNavigate
 
   const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); // Clear previous messages
+    setMessage('');
     try {
-      const data = await loginUserApi(form.username, form.password); // Panggil fungsi API
-      setUser(data.user); // Asumsi backend mengembalikan objek user
+      const data = await loginUserApi(form.username, form.password);
+      setUser(data.user);
       setSuccess(true);
       setMessage('Login successful!');
+      navigate('/'); // Redirect ke halaman Home setelah login berhasil
     } catch (error) {
       setSuccess(false);
       setMessage(error.message || 'Terjadi kesalahan saat login.');
@@ -29,7 +31,9 @@ function Login({ setUser }) {
         <h2 className="text-2xl font-extrabold mb-6 text-blue-900 text-center">Login</h2>
         {success ? (
           <div className="text-green-600 text-center font-semibold text-lg">
-            Login Berhasil! Selamat datang, {form.username}. <Link to="/" className="text-blue-600 hover:underline">Go to Courses</Link>
+            Login Berhasil! Selamat datang, {form.username}.
+            {/* Link ini tidak perlu lagi karena sudah otomatis redirect */}
+            {/* <Link to="/" className="text-blue-600 hover:underline">Go to Courses</Link> */}
           </div>
         ) : (
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>

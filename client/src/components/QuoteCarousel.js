@@ -3,13 +3,12 @@ import React, { useState, useEffect } from 'react';
 function QuoteCarousel({ images }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Auto-slide every 5 seconds (opsional)
   useEffect(() => {
     if (images.length > 1) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 5000); // Ganti gambar setiap 5 detik
-      return () => clearInterval(interval); // Cleanup interval on component unmount
+      }, 5000); 
+      return () => clearInterval(interval); 
     }
   }, [images.length]);
 
@@ -28,32 +27,28 @@ function QuoteCarousel({ images }) {
   }
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-lg shadow-xl" style={{ height: '300px' }}> {/* Sesuaikan tinggi sesuai kebutuhan */}
+    <div className="relative w-full max-w-3xl mx-auto overflow-hidden rounded-lg shadow-xl" style={{ height: '300px' }}>
       <img
         src={images[currentIndex]}
         alt={`Quote ${currentIndex + 1}`}
         className="w-full h-full object-cover transition-opacity duration-500"
-        // Style untuk transisi opasitas yang lebih halus
-        style={{ opacity: 1 }} 
+        style={{ opacity: 1 }}
       />
 
-      {/* Previous Button */}
       <button
         onClick={goToPrevious}
         className="absolute left-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-r-lg focus:outline-none hover:bg-opacity-75 transition"
       >
-        &#10094; {/* Karakter panah kiri */}
+        &#10094; 
       </button>
 
-      {/* Next Button */}
       <button
         onClick={goToNext}
         className="absolute right-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-l-lg focus:outline-none hover:bg-opacity-75 transition"
       >
-        &#10095; {/* Karakter panah kanan */}
+        &#10095;
       </button>
 
-      {/* Indicators (dots) */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
         {images.map((_, index) => (
           <button

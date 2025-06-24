@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { registerUserApi } from '../api'; // Import fungsi API
+import { registerUserApi } from '../api';
 
 function Register() {
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'buyer' });
@@ -11,9 +11,9 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage(''); // Clear previous messages
+    setMessage('');
     try {
-      const data = await registerUserApi(form); // Panggil fungsi API
+      const data = await registerUserApi(form);
       setMessage(data.message);
       setSuccess(true);
     } catch (error) {
