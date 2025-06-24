@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getCourseByIdApi } from '../api'; // Import fungsi API
+import { getCourseByIdApi } from '../api';
 
-function CourseDetail() {
+function CourseDetail({ addToCart }) {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ function CourseDetail() {
     const fetchCourse = async () => {
       try {
         setLoading(true);
-        const data = await getCourseByIdApi(id); // Panggil fungsi API
+        const data = await getCourseByIdApi(id);
         setCourse(data);
       } catch (err) {
         setError("Gagal mengambil detail kursus.");
@@ -32,7 +32,7 @@ function CourseDetail() {
     return <div className="text-center mt-20 text-red-600 text-xl">{error}</div>;
   }
 
-  if (!course) { // Jika kursus tidak ditemukan setelah loading selesai
+  if (!course) {
     return <div className="text-center mt-20 text-gray-500 text-xl">Kursus tidak ditemukan.</div>;
   }
 
@@ -49,7 +49,14 @@ function CourseDetail() {
           <p className="font-semibold mt-4">Description:</p>
           <p>{course.description}</p>
         </div>
-        <Link className="mt-8 inline-block text-blue-700 hover:underline font-semibold" to="/">← Back to Courses</Link>
+        <button
+          className="mt-8 inline-block bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition"
+          onClick={() => addToCart(course)}
+        >
+          Add to Cart
+        </button>
+        {/* Perbaikan link: Arahkan ke /courses */}
+        <Link className="mt-4 block text-blue-700 hover:underline font-semibold" to="/courses">← Back to Courses</Link>
       </div>
     </div>
   );

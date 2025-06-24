@@ -1,47 +1,71 @@
-// client/src/App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import './index.css';
+import './index.css'; // Pastikan Tailwind CSS diimpor di index.css atau App.css utama
 
 // Import komponen-komponen yang sudah dipisahkan
 import Navbar from './components/Navbar';
-import CourseList from './pages/CourseList';
+import CourseList from './pages/CourseList'; // Import CourseList dari pages
 import CourseDetail from './pages/CourseDetail';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
-import CartPage from './pages/CartPage'; // Impor CartPage
-// import Home from './pages/Home'; // Impor jika kamu ingin halaman Home yang terpisah
+import CartPage from './pages/CartPage'; 
+import Home from './pages/Home'; // Impor komponen Home yang baru
 
 function App() {
-  const [user, setUser] = useState(null); // State untuk user global
+  const [user, setUser] = useState(null); 
+  const [cart, setCart] = useState([]);
 
-  // TODO: Tambahkan state atau konteks untuk mengelola data keranjang
+  // Fungsi untuk menambah kursus ke keranjang
+  const addToCart = (courseToAdd) => {
+    setCart((prevCart) => {
+      const isAlreadyInCart = prevCart.some(item => item.id === courseToAdd.id);
+      if (isAlreadyInCart) {
+        alert('Kursus ini sudah ada di keranjang!');
+        return prevCart;
+      }
+      alert(`${courseToAdd.title} ditambahkan ke keranjang!`);
+      return [...prevCart, courseToAdd];
+    });
+  };
+
+  // Fungsi untuk menghapus kursus dari keranjang
+  const removeFromCart = (courseIdToRemove) => {
+    setCart((prevCart) => {
+      alert('Kursus dihapus dari keranjang.');
+      return prevCart.filter(item => item.id !== courseIdToRemove);
+    });
+  };
+
+  // Fungsi untuk mengosongkan keranjang (setelah 'add subscription')
+  const clearCart = () => {
+    setCart([]);
+  };
 
   return (
     <Router>
       <div className="App">
-        {/* Navbar akan selalu tampil */}
-        <Navbar user={user} setUser={setUser} />
-
+        {/* Navbar akan selalu tampil, passing user, setUser, cart untuk tampilan jumlah item */}
+        <Navbar user={user} setUser={setUser} cart={cart} />
+        
         {/* Konten halaman akan di-render di sini sesuai rute */}
         <Routes>
-          {/*
-            Jika kamu ingin halaman selamat datang terpisah dari daftar kursus:
-            <Route path="/" element={<Home />} />
-            <Route path="/courses" element={<CourseList />} />
-          */}
+          {/* Rute default sekarang mengarah ke halaman Home */}
+          <Route path="/" element={<Home />} /> 
+          
+          {/* Rute untuk daftar semua kursus (pindah dari '/') */}
+          <Route path="/courses" element={<CourseList addToCart={addToCart} />} />
 
-          {/* Jika kamu ingin daftar kursus langsung tampil di halaman utama (seperti App.js lama): */}
-          <Route path="/" element={<CourseList />} />
-
-          <Route path="/course/:id" element={<CourseDetail />} />
+          {/* Rute detail kursus, passing addToCart */}
+          <Route path="/course/:id" element={<CourseDetail addToCart={addToCart} />} />
+          
           <Route path="/login" element={<Login setUser={setUser} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminPanel user={user} />} />
-          <Route path="/cart" element={<CartPage />} /> {/* Tambahkan rute untuk CartPage */}
-          {/* Tambahkan rute lain jika ada */}
+          
+          {/* Halaman keranjang, passing cart, removeFromCart, dan clearCart */}
+          <Route path="/cart" element={<CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />} />
         </Routes>
       </div>
     </Router>
