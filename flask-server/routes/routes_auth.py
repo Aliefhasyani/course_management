@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.User import db, User 
 from werkzeug.security import generate_password_hash
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -116,3 +116,13 @@ def delete_user(user_id):
     db.session.delete(user)
     db.session.commit()
     return jsonify({"message": "User deleted successfully!"}), 200
+
+@auth_bp.route('/profile', methods=['GET'])
+@jwt_required()
+def profile():
+    user_id = get_jwt_identity()
+    from models.User import User
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"message": "User not found"}), 404
+    return jsonify(user.to_dict()), 200

@@ -1,7 +1,18 @@
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import axios from 'axios';
 
-// Helper to get JWT token from localStorage
+export const API = axios.create({
+  baseURL: 'http://127.0.0.1:5000/api',
+});
+
+// Fungsi untuk ambil profil user
+export const getProfile = () => API.get('/profile');
+
+
+const API_BASE_URL = 'http://localhost:5000'; // Ubah ini dari 127.0.0.1
+
+// Helper untuk mendapatkan token JWT dari localStorage
 const getToken = () => localStorage.getItem('access_token');
+
 
 const authHeader = (isJson = true) => {
   const token = getToken();
