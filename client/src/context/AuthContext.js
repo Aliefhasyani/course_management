@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import * as api from '../api';
+import { API, getProfile } from '../api';
 
 const AuthContext = createContext(null);
 
@@ -11,14 +11,11 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const token = localStorage.getItem('access_token');
         if (token) {
-            // Jika ada token, set header authorization untuk request selanjutnya
-            api.API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-            // Ambil data profil dari backend
-            api.getProfile().then(response => {
+            API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            getProfile().then(response => {
                 setUser(response.data);
                 setIsLoggedIn(true);
             }).catch(() => {
-                // Jika token tidak valid, hapus dari local storage
                 localStorage.removeItem('access_token');
                 setUser(null);
                 setIsLoggedIn(false);
@@ -32,14 +29,14 @@ export const AuthProvider = ({ children }) => {
 
     const login = (userData, token) => {
         localStorage.setItem('access_token', token);
-        api.API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         setUser(userData);
         setIsLoggedIn(true);
     };
 
     const logout = () => {
         localStorage.removeItem('access_token');
-        delete api.API.defaults.headers.common['Authorization'];
+        delete API.defaults.headers.common['Authorization'];
         setUser(null);
         setIsLoggedIn(false);
     };

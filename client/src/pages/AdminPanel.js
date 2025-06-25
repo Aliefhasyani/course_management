@@ -152,22 +152,22 @@ function AdminPanel({ user }) {
   };
 
   const openCreateUserModal = () => {
-  setCurrentUser(null);
-  setUserForm({ username: '', email: '', role: 'buyer', password: '' }); // role: 'buyer' as default
-  setUserFormErrors({});
-  setIsCreateUserModalOpen(true);
-};
+    setCurrentUser(null);
+    setUserForm({ username: '', email: '', role: 'buyer', password: '' }); // role: 'buyer' as default
+    setUserFormErrors({});
+    setIsCreateUserModalOpen(true);
+  };
 
-const validateUserForm = () => {
-  const errors = {};
-  if (!userForm.username) errors.username = 'Username is required.';
-  if (!userForm.email) errors.email = 'Email is required.';
-  if (!userForm.role) errors.role = 'Role is required.';
-  if (!currentUser && !userForm.password) errors.password = 'Password is required for new users.';
-  if (userForm.password && userForm.password.length < 6) errors.password = 'Password must be at least 6 characters.';
-  setUserFormErrors(errors);
-  return Object.keys(errors).length === 0;
-};
+  const validateUserForm = () => {
+    const errors = {};
+    if (!userForm.username) errors.username = 'Username is required.';
+    if (!userForm.email) errors.email = 'Email is required.';
+    if (!userForm.role) errors.role = 'Role is required.';
+    if (!currentUser && !userForm.password) errors.password = 'Password is required for new users.';
+    if (userForm.password && userForm.password.length < 6) errors.password = 'Password must be at least 6 characters.';
+    setUserFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleCreateUserSubmit = async (e) => {
     e.preventDefault();
@@ -235,8 +235,8 @@ const validateUserForm = () => {
   };
 
   // --- RENDER UTAMA ---
-  if (!user || user.role !== 'admin') {
-    return <div className="text-center text-red-600 mt-10 text-xl">Access denied. Admins only.</div>;
+  if (!user || (user.role !== 'admin' && user.role !== 'seller')) {
+    return <div className="text-center text-red-600 mt-10 text-xl">Access denied.</div>;
   }
 
   if (loading) {
@@ -244,49 +244,61 @@ const validateUserForm = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10">
-      <div className="max-w-7xl mx-auto px-4">
-        <h1 className="text-4xl font-extrabold text-blue-800 mb-6 text-center drop-shadow">Admin Panel</h1>
-        {error && <div className="text-red-600 text-center mb-4">{error}</div>}
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#312e81] py-10 relative overflow-hidden">
+      {/* Futuristic glowing lines */}
+      <div className="pointer-events-none absolute inset-0 z-0">
+        <div className="absolute top-0 left-1/4 w-1 h-full bg-blue-500/10 blur-2xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-1 h-full bg-fuchsia-500/10 blur-2xl animate-pulse" />
+        <div className="absolute top-1/2 left-0 w-full h-1 bg-cyan-400/10 blur-2xl animate-pulse" style={{ transform: 'translateY(-50%)' }} />
+        <div className="absolute top-1/3 left-0 w-full h-1 bg-purple-400/10 blur-2xl animate-pulse" />
+      </div>
+      <div className="max-w-7xl mx-auto px-4 z-10 relative">
+        <h1 className="text-4xl font-extrabold text-blue-300 mb-6 text-center drop-shadow font-futuristic tracking-widest">
+          {user.role === 'admin' ? 'Admin Panel' : 'Seller Panel'}
+        </h1>
+        {error && <div className="text-red-400 text-center mb-4">{error}</div>}
 
         {/* Tab Navigation */}
         <div className="flex justify-center mb-8">
           <button
-            className={`py-2 px-6 rounded-t-lg font-semibold ${activeTab === 'courses' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
+            className={`py-2 px-6 rounded-t-lg font-semibold transition-all duration-200 border-b-4 ${activeTab === 'courses' ? 'bg-gradient-to-r from-blue-700 to-fuchsia-700 text-white border-fuchsia-400 shadow-lg' : 'bg-slate-800 text-blue-200 border-transparent hover:bg-slate-700'}`}
             onClick={() => setActiveTab('courses')}
           >
             Kelola Kursus
           </button>
-          <button
-            className={`py-2 px-6 rounded-t-lg font-semibold ${activeTab === 'users' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
-            onClick={() => setActiveTab('users')}
-          >
-            Kelola Pengguna
-          </button>
+          {user.role === 'admin' && (
+            <button
+              className={`py-2 px-6 rounded-t-lg font-semibold transition-all duration-200 border-b-4 ${activeTab === 'users' ? 'bg-gradient-to-r from-blue-700 to-fuchsia-700 text-white border-fuchsia-400 shadow-lg' : 'bg-slate-800 text-blue-200 border-transparent hover:bg-slate-700'}`}
+              onClick={() => setActiveTab('users')}
+            >
+              Kelola Pengguna
+            </button>
+          )}
         </div>
 
+        {/* Hanya admin yang bisa akses tab users */}
         {activeTab === 'courses' && (
           <>
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
-              <p className="mb-4 text-lg">Total Kursus di Database: <span className="font-semibold">{adminData?.courses_count || '...'}</span></p>
+            <div className="bg-gradient-to-r from-blue-900/80 to-fuchsia-900/80 rounded-xl shadow-2xl p-6 mb-8 border border-blue-800/30">
+              <p className="mb-4 text-lg text-blue-100">Total Kursus di Database: <span className="font-semibold text-fuchsia-300">{adminData?.courses_count || '...'}</span></p>
               <button
-                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition"
+                className="bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-lg"
                 onClick={openCreateCourseModal}
               >
-                Tambah Kursus Baru
+                + Tambah Kursus Baru
               </button>
             </div>
 
             {/* Daftar Kursus */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-blue-800 mb-6">Daftar Kursus</h2>
+            <div className="bg-gradient-to-r from-blue-900/80 to-fuchsia-900/80 rounded-xl shadow-2xl p-6 border border-blue-800/30">
+              <h2 className="text-2xl font-bold text-blue-200 mb-6">Daftar Kursus</h2>
               {courses.length === 0 ? (
-                <p className="text-gray-500 text-center">Tidak ada kursus yang ditemukan. Anda bisa menambahkannya atau mengimpor dari Udemy.</p>
+                <p className="text-blue-200 text-center">Tidak ada kursus yang ditemukan. Anda bisa menambahkannya atau mengimpor dari Udemy.</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white">
+                  <table className="min-w-full bg-transparent">
                     <thead>
-                      <tr className="bg-blue-100 text-blue-800 uppercase text-sm leading-normal">
+                      <tr className="bg-gradient-to-r from-blue-800 to-fuchsia-800 text-fuchsia-200 uppercase text-sm leading-normal">
                         <th className="py-3 px-6 text-left">ID</th>
                         <th className="py-3 px-6 text-left">Title</th>
                         <th className="py-3 px-6 text-left">Price</th>
@@ -294,9 +306,9 @@ const validateUserForm = () => {
                         <th className="py-3 px-6 text-center">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="text-gray-700 text-sm font-light">
+                    <tbody className="text-blue-100 text-sm font-light">
                       {courses.map(course => (
-                        <tr key={course.id} className="border-b border-gray-200 hover:bg-gray-100">
+                        <tr key={course.id} className="border-b border-blue-900/40 hover:bg-fuchsia-900/30 transition">
                           <td className="py-3 px-6 text-left whitespace-nowrap">{course.id}</td>
                           <td className="py-3 px-6 text-left">{course.title}</td>
                           <td className="py-3 px-6 text-left">{course.org_price}</td>
@@ -304,13 +316,13 @@ const validateUserForm = () => {
                           <td className="py-3 px-6 text-center">
                             <div className="flex item-center justify-center space-x-2">
                               <button
-                                className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded transition"
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded transition shadow"
                                 onClick={() => openEditCourseModal(course)}
                               >
                                 Edit
                               </button>
                               <button
-                                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition"
+                                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition shadow"
                                 onClick={() => handleDeleteCourse(course.id)}
                               >
                                 Hapus
@@ -327,25 +339,25 @@ const validateUserForm = () => {
           </>
         )}
 
-        {activeTab === 'users' && (
+        {activeTab === 'users' && user.role === 'admin' && (
           <>
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <div className="bg-gradient-to-r from-blue-900/80 to-fuchsia-900/80 rounded-xl shadow-2xl p-6 mb-8 border border-blue-800/30">
               <button
-                className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition"
+                className="bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-lg"
                 onClick={openCreateUserModal}
               >
-                Add New User
+                + Tambah Pengguna Baru
               </button>
             </div>
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-blue-800 mb-6">Daftar Pengguna</h2>
+            <div className="bg-gradient-to-r from-blue-900/80 to-fuchsia-900/80 rounded-xl shadow-2xl p-6 border border-blue-800/30">
+              <h2 className="text-2xl font-bold text-blue-200 mb-6">Daftar Pengguna</h2>
               {users.length === 0 ? (
-                <p className="text-gray-500 text-center">Tidak ada pengguna yang ditemukan.</p>
+                <p className="text-blue-200 text-center">Tidak ada pengguna yang ditemukan.</p>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white">
+                  <table className="min-w-full bg-transparent">
                     <thead>
-                      <tr className="bg-blue-100 text-blue-800 uppercase text-sm leading-normal">
+                      <tr className="bg-gradient-to-r from-blue-800 to-fuchsia-800 text-fuchsia-200 uppercase text-sm leading-normal">
                         <th className="py-3 px-6 text-left">ID</th>
                         <th className="py-3 px-6 text-left">Username</th>
                         <th className="py-3 px-6 text-left">Email</th>
@@ -353,9 +365,9 @@ const validateUserForm = () => {
                         <th className="py-3 px-6 text-center">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="text-gray-700 text-sm font-light">
+                    <tbody className="text-blue-100 text-sm font-light">
                       {users.map(userItem => (
-                        <tr key={userItem.id} className="border-b border-gray-200 hover:bg-gray-100">
+                        <tr key={userItem.id} className="border-b border-blue-900/40 hover:bg-fuchsia-900/30 transition">
                           <td className="py-3 px-6 text-left whitespace-nowrap">{userItem.id}</td>
                           <td className="py-3 px-6 text-left">{userItem.username}</td>
                           <td className="py-3 px-6 text-left">{userItem.email}</td>
@@ -363,13 +375,13 @@ const validateUserForm = () => {
                           <td className="py-3 px-6 text-center">
                             <div className="flex item-center justify-center space-x-2">
                               <button
-                                className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded transition"
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded transition shadow"
                                 onClick={() => openEditUserModal(userItem)}
                               >
                                 Edit
                               </button>
                               <button
-                                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition"
+                                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition shadow"
                                 onClick={() => handleDeleteUser(userItem.id, userItem.username)}
                               >
                                 Hapus
@@ -388,103 +400,103 @@ const validateUserForm = () => {
 
         {/* Modal Tambah/Edit Kursus */}
         {isCourseModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">
+          <div className="fixed inset-0 bg-slate-900/80 flex justify-center items-center z-50">
+            <div className="bg-gradient-to-br from-blue-900 via-slate-900 to-fuchsia-900 rounded-lg shadow-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto border border-fuchsia-700/30">
+              <h2 className="text-2xl font-bold text-fuchsia-200 mb-6 text-center">
                 {currentCourse ? 'Edit Kursus' : 'Tambah Kursus Baru'}
               </h2>
               <form onSubmit={handleCourseFormSubmit} className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Title:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Title:</label>
                   <input type="text" name="title" value={courseForm.title} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {courseFormErrors.title && <p className="text-red-500 text-xs italic">{courseFormErrors.title}</p>}
+                  {courseFormErrors.title && <p className="text-red-400 text-xs italic">{courseFormErrors.title}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Original Price:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Original Price:</label>
                   <input type="text" name="org_price" value={courseForm.org_price} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {courseFormErrors.org_price && <p className="text-red-500 text-xs italic">{courseFormErrors.org_price}</p>}
+                  {courseFormErrors.org_price && <p className="text-red-400 text-xs italic">{courseFormErrors.org_price}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Description:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Description:</label>
                   <textarea name="description" value={courseForm.description} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-24"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline h-24"
                     required
                   ></textarea>
-                  {courseFormErrors.description && <p className="text-red-500 text-xs italic">{courseFormErrors.description}</p>}
+                  {courseFormErrors.description && <p className="text-red-400 text-xs italic">{courseFormErrors.description}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Category:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Category:</label>
                   <input type="text" name="category" value={courseForm.category} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Language:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Language:</label>
                   <input type="text" name="language" value={courseForm.language} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Platform:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Platform:</label>
                   <input type="text" name="platform" value={courseForm.platform} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Picture URL (pic):</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Picture URL (pic):</label>
                   <input type="url" name="pic" value={courseForm.pic} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">SKU:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">SKU:</label>
                   <input type="text" name="sku" value={courseForm.sku} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Coupon:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Coupon:</label>
                   <input type="text" name="coupon" value={courseForm.coupon} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Rating (0.0 - 5.0):</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Rating (0.0 - 5.0):</label>
                   <input type="number" step="0.1" min="0" max="5" name="rating" value={courseForm.rating} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Duration (hours):</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Duration (hours):</label>
                   <input type="number" step="0.1" name="duration" value={courseForm.duration} onChange={handleCourseFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Expiry Date (YYYY-MM-DD):</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Expiry Date (YYYY-MM-DD):</label>
                   <input type="text" name="expiry" value={courseForm.expiry} onChange={handleCourseFormChange}
                     placeholder="YYYY-MM-DD"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
                 </div>
                 
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
                     type="button"
-                    className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition"
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"
                     onClick={() => setIsCourseModalOpen(false)}
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+                    className="bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded transition shadow"
                   >
                     {currentCourse ? 'Update' : 'Tambah'}
                   </button>
@@ -495,57 +507,56 @@ const validateUserForm = () => {
         )}
 
         {/* Modal Edit User */}
-        {isUserModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">Edit Pengguna</h2>
+        {isUserModalOpen && user.role === 'admin' && (
+          <div className="fixed inset-0 bg-slate-900/80 flex justify-center items-center z-50">
+            <div className="bg-gradient-to-br from-blue-900 via-slate-900 to-fuchsia-900 rounded-lg shadow-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto border border-fuchsia-700/30">
+              <h2 className="text-2xl font-bold text-fuchsia-200 mb-6 text-center">Edit Pengguna</h2>
               <form onSubmit={handleUserFormSubmit} className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Username:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Username:</label>
                   <input type="text" name="username" value={userForm.username} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {userFormErrors.username && <p className="text-red-500 text-xs italic">{userFormErrors.username}</p>}
+                  {userFormErrors.username && <p className="text-red-400 text-xs italic">{userFormErrors.username}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Email:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Email:</label>
                   <input type="email" name="email" value={userForm.email} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {userFormErrors.email && <p className="text-red-500 text-xs italic">{userFormErrors.email}</p>}
+                  {userFormErrors.email && <p className="text-red-400 text-xs italic">{userFormErrors.email}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Role:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Role:</label>
                   <select name="role" value={userForm.role} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   >
                     <option value="buyer">Buyer</option>
                     <option value="seller">Seller</option>
                     <option value="admin">Admin</option>
                   </select>
-                  {userFormErrors.role && <p className="text-red-500 text-xs italic">{userFormErrors.role}</p>}
+                  {userFormErrors.role && <p className="text-red-400 text-xs italic">{userFormErrors.role}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Password (biarkan kosong jika tidak ingin mengubah):</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Password (biarkan kosong jika tidak ingin mengubah):</label>
                   <input type="password" name="password" value={userForm.password} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                   />
-                   {userFormErrors.password && <p className="text-red-500 text-xs italic">{userFormErrors.password}</p>}
+                   {userFormErrors.password && <p className="text-red-400 text-xs italic">{userFormErrors.password}</p>}
                 </div>
-                
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
                     type="button"
-                    className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition"
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"
                     onClick={() => setIsUserModalOpen(false)}
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+                    className="bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded transition shadow"
                   >
                     Update User
                   </button>
@@ -556,58 +567,58 @@ const validateUserForm = () => {
         )}
 
         {/* Modal Tambah User */}
-        {isCreateUserModalOpen && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto">
-              <h2 className="text-2xl font-bold text-blue-900 mb-6 text-center">Tambah Pengguna Baru</h2>
+        {isCreateUserModalOpen && user.role === 'admin' && (
+          <div className="fixed inset-0 bg-slate-900/80 flex justify-center items-center z-50">
+            <div className="bg-gradient-to-br from-blue-900 via-slate-900 to-fuchsia-900 rounded-lg shadow-2xl p-8 w-full max-w-md max-h-[90vh] overflow-y-auto border border-fuchsia-700/30">
+              <h2 className="text-2xl font-bold text-fuchsia-200 mb-6 text-center">Tambah Pengguna Baru</h2>
               <form onSubmit={handleCreateUserSubmit} className="grid grid-cols-1 gap-4">
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Username:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Username:</label>
                   <input type="text" name="username" value={userForm.username} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {userFormErrors.username && <p className="text-red-500 text-xs italic">{userFormErrors.username}</p>}
+                  {userFormErrors.username && <p className="text-red-400 text-xs italic">{userFormErrors.username}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Email:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Email:</label>
                   <input type="email" name="email" value={userForm.email} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {userFormErrors.email && <p className="text-red-500 text-xs italic">{userFormErrors.email}</p>}
+                  {userFormErrors.email && <p className="text-red-400 text-xs italic">{userFormErrors.email}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Role:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Role:</label>
                   <select name="role" value={userForm.role} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   >
                     <option value="buyer">Buyer</option>
                     <option value="seller">Seller</option>
                     <option value="admin">Admin</option>
                   </select>
-                  {userFormErrors.role && <p className="text-red-500 text-xs italic">{userFormErrors.role}</p>}
+                  {userFormErrors.role && <p className="text-red-400 text-xs italic">{userFormErrors.role}</p>}
                 </div>
                 <div>
-                  <label className="block text-gray-700 text-sm font-bold mb-1">Password:</label>
+                  <label className="block text-blue-200 text-sm font-bold mb-1">Password:</label>
                   <input type="password" name="password" value={userForm.password} onChange={handleUserFormChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 bg-slate-900 text-fuchsia-100 leading-tight focus:outline-none focus:shadow-outline"
                     required
                   />
-                  {userFormErrors.password && <p className="text-red-500 text-xs italic">{userFormErrors.password}</p>}
+                  {userFormErrors.password && <p className="text-red-400 text-xs italic">{userFormErrors.password}</p>}
                 </div>
                 <div className="flex justify-end space-x-4 mt-6">
                   <button
                     type="button"
-                    className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded transition"
+                    className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded transition"
                     onClick={() => setIsCreateUserModalOpen(false)}
                   >
                     Batal
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+                    className="bg-gradient-to-r from-fuchsia-600 to-blue-600 hover:from-fuchsia-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded transition shadow"
                   >
                     Tambah
                   </button>
@@ -617,6 +628,13 @@ const validateUserForm = () => {
           </div>
         )}
       </div>
+      <style>{`
+        .font-futuristic {
+          font-family: 'Orbitron', 'Montserrat', 'Segoe UI', Arial, sans-serif;
+          letter-spacing: 2px;
+        }
+      `}</style>
+      <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet" />
     </div>
   );
 }
