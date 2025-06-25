@@ -1,7 +1,8 @@
-const API_BASE_URL = 'http://127.0.0.1:5000';
+const API_BASE_URL = 'http://localhost:5000'; // Ubah ini dari 127.0.0.1
 
-// Helper to get JWT token from localStorage
+// Helper untuk mendapatkan token JWT dari localStorage
 const getToken = () => localStorage.getItem('access_token');
+
 
 const authHeader = (isJson = true) => {
   const token = getToken();
