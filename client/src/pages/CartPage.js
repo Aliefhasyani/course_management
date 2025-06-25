@@ -77,7 +77,7 @@ function CartPage({ cart, removeFromCart, clearCart }) {
               className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition transform hover:scale-105"
               onClick={handleAddSubscription}
             >
-              Add Subscription (Bayar Sekarang)
+          Bayar Sekarang
             </button>
           </div>
         </div>

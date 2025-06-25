@@ -15,7 +15,11 @@ function FaqPage() {
 
   return (
     <div className="max-w-2xl mx-auto py-10">
-      <h1 className="text-3xl font-bold mb-8 text-center text-blue-800">Frequently Asked Questions</h1>
+      <h1 className="text-3xl font-bold mb-8 text-center text-blue-800">Frequently Asked Questions
+        <br>
+        </br>
+        (FAQ)
+        </h1>
       {faqs.length === 0 ? (
         <div className="text-center text-gray-500">No FAQs found.</div>
       ) : (

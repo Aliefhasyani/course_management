@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, request
 import requests
+from models.Faq import FAQ
 from models.Course import db, Course
+from models.Post import Post
+from models.User import User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
@@ -52,7 +55,7 @@ def import_courses():
     return jsonify({"message": f"Courses imported successfully! Total imported: {total_imported}"}), 201
 
 @udemy_bp.route('/api/courses', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def get_courses():
     courses = Course.query.all()
     result = []
@@ -170,7 +173,7 @@ def admin_panel():
 
 @udemy_bp.route('/api/faqs', methods=['GET'])
 def get_all_faqs():
-    from models.Faq import FAQ
+    
     faqs = FAQ.query.all()
     return jsonify([
         {
@@ -180,3 +183,42 @@ def get_all_faqs():
             "answer": faq.answer
         } for faq in faqs
     ])
+    
+@udemy_bp.route('/api/posts', methods=['GET'])
+def get_posts():
+    posts = Post.query.order_by(Post.created_at.desc()).all()
+    return jsonify([
+        {
+            "id": post.id,
+            "user_id": post.user_id,
+            "username": post.user.username if post.user else None,
+            "content": post.content,
+            "created_at": post.created_at.isoformat()
+        }
+        for post in posts
+    ])
+
+
+@udemy_bp.route('/api/posts', methods=['POST'])
+@jwt_required()
+def create_post():
+    data = request.get_json()
+    content = data.get('content', '').strip()
+    if not content:
+        return jsonify({"message": "Content is required."}), 400
+    if len(content) > 280:
+        return jsonify({"message": "Content must be 280 characters or less."}), 400
+
+    user_id = get_jwt_identity()
+    post = Post(user_id=user_id, content=content)
+    db.session.add(post)
+    db.session.commit()
+    return jsonify({
+        "message": "Post created successfully!",
+        "post": {
+            "id": post.id,
+            "user_id": post.user_id,
+            "content": post.content,
+            "created_at": post.created_at.isoformat()
+        }
+    }), 201

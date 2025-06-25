@@ -1,6 +1,5 @@
 from flask import Flask
 from models.Course import db
-from models.Faq import FAQ 
 from routes.routes_udemy import udemy_bp
 from routes.routes_auth import auth_bp
 from flask_cors import CORS

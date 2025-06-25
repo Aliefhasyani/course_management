@@ -210,4 +210,25 @@ export const deleteUserApi = async (userId) => {
     console.error(`Error deleting user ${userId}:`, error);
     throw error;
   }
+  
+}
+export const getPostsApi = async () => {
+  const response = await fetch('http://127.0.0.1:5000/api/posts');
+  if (!response.ok) throw new Error('Failed to fetch posts');
+  return await response.json();
+};
+
+export const createPostApi = async (content) => {
+  const token = localStorage.getItem('access_token');
+  const response = await fetch('http://127.0.0.1:5000/api/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {})
+    },
+    body: JSON.stringify({ content }),
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || 'Failed to create post');
+  return data.post;
 };

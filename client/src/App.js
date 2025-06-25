@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import './index.css'; // Pastikan Tailwind CSS diimpor di sini
+import './index.css'; 
+import Post from './pages/Post';// Pastikan Tailwind CSS diimpor di sini
 
 // Import SEMUA komponen halaman yang sudah dipisah
 import Navbar from './components/Navbar';
@@ -13,6 +14,7 @@ import Register from './pages/Register';
 import AdminPanel from './pages/AdminPanel';
 import CartPage from './pages/CartPage'; // Komponen halaman keranjang
 import FaqPage from './pages/FaqPage';
+import PostPage from './pages/Post';
 
 function App() {
   const [user, setUser] = useState(null); 
@@ -70,6 +72,7 @@ function App() {
           {/* Rute untuk Admin Panel. Mempassing user untuk otorisasi */}
           <Route path="/admin" element={<AdminPanel user={user} />} />
           <Route path="/faqs" element={<FaqPage />} />
+          <Route path="/posts" element={<PostPage user={user} />} />
 
           {/* Rute untuk halaman Keranjang. Mempassing state cart dan fungsi modifikasinya */}
           <Route path="/cart" element={<CartPage cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} />} />

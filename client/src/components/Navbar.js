@@ -26,6 +26,7 @@ function Navbar({ user, setUser, cart }) { // Menerima prop 'cart'
                   </span>
                 )}
               </Link>
+              <Link className="text-blue-100 hover:text-yellow-300 font-medium transition" to="/posts">Posts</Link>
 
               {/* Tampilan user info dan Logout */}
               <span className="ml-2 text-yellow-200 font-semibold">{user.username} <span className="text-xs bg-blue-800 px-2 py-1 rounded ml-1">{user.role}</span></span>
